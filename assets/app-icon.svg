@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Robot AI Joystick</title>
+  <rect width="512" height="512" rx="96" fill="#0d1b22"/>
+  <path d="M72 332c0-34 28-62 62-62h244c34 0 62 28 62 62v42c0 34-28 62-62 62H134c-34 0-62-28-62-62z" fill="#f4f8fb"/>
+  <path d="M148 170c0-33 27-60 60-60h96c33 0 60 27 60 60v56H148z" fill="#2ad0a7"/>
+  <path d="M160 226h192v44H160z" fill="#f4f8fb"/>
+  <circle cx="208" cy="178" r="20" fill="#78d8ff"/>
+  <circle cx="304" cy="178" r="20" fill="#78d8ff"/>
+  <path d="M256 110V66" stroke="#f3c64e" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="256" cy="54" r="20" fill="#f3c64e"/>
+  <circle cx="256" cy="354" r="48" fill="#d95d4f"/>
+  <path d="M256 306a48 48 0 1 1 0 96 48 48 0 0 1 0-96zm0 28a20 20 0 1 0 0 40 20 20 0 0 0 0-40z" fill="#1f2e36"/>
+  <path d="M132 352h62M318 352h62M256 292v-46" stroke="#0d1b22" stroke-width="24" stroke-linecap="round"/>
+</svg>

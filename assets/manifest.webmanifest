@@ -1,0 +1,21 @@
+{
+  "name": "Robot AI Joystick",
+  "short_name": "Robot Joystick",
+  "description": "Installable desktop controller for robotics projects using ESP32, Arduino, Raspberry Pi, and other boards.",
+  "start_url": "../index.html",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#0d1b22",
+  "theme_color": "#0d1b22",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "education"],
+  "prefer_related_applications": false
+}

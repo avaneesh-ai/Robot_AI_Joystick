@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Robot AI Joystick</title>
+    <meta name="theme-color" content="#edf7fb" />
+    <meta name="description" content="Browser-usable and installable desktop joystick controller for robotics projects using ESP32, Arduino, Raspberry Pi, and other boards." />
+    <link rel="manifest" href="assets/manifest.webmanifest" />
+    <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
+    <script>
+      try {
+        const cookieTheme = document.cookie
+          .split("; ")
+          .find((item) => item.startsWith("robot-ai-theme="))
+          ?.split("=")[1];
+        const savedTheme = localStorage.getItem("robot-ai-theme") || cookieTheme;
+        document.documentElement.dataset.theme = savedTheme === "night" ? "night" : "light";
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+    <link rel="stylesheet" href="assets/styles.css?v=14" />
+  </head>
+  <body>
+    <div class="desktop-gate" role="alert">
+      <div>
+        <p class="step-count">Desktop access only</p>
+        <h2>Laptop or desktop required</h2>
+        <p>Open Robot AI Joystick on a laptop or desktop. Installation is optional, but login is required before controls open.</p>
+      </div>
+    </div>
+
+    <button class="install-action" id="install-app" type="button" aria-label="Install app" title="Install app" hidden>↓</button>
+    <button class="theme-action" id="theme-toggle" type="button" aria-label="Switch to night mode" aria-pressed="false">N</button>
+
+    <main class="app-shell">
+      <section class="brand-panel" aria-label="Robot AI Joystick preview">
+        <div class="robot-visual" aria-hidden="true">
+          <div class="robot-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="robot-body">
+            <div class="signal-line"></div>
+            <div class="signal-line"></div>
+            <div class="signal-line"></div>
+          </div>
+          <div class="joystick-preview">
+            <div class="stick"></div>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">Robot AI Joystick</p>
+          <h1>Verify the build before controls unlock.</h1>
+        </div>
+      </section>
+
+      <section class="flow-panel" aria-live="polite">
+        <form id="credentials-screen" class="flow-screen active" novalidate>
+          <div class="screen-header">
+            <p class="step-count">Step 1 of 2</p>
+            <h2>Sign in details</h2>
+          </div>
+
+          <p class="access-note" id="auth-mode-note">Login with a registered email or mobile number. New users must create an account first.</p>
+
+          <label for="email">Email ID or mobile number</label>
+          <input id="email" name="email" type="text" autocomplete="username" required placeholder="you@example.com or 9876543210" />
+
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Enter password" />
+
+          <p id="credentials-error" class="error-message" role="alert"></p>
+
+          <div class="button-row auth-actions">
+            <button class="secondary-action" id="switch-auth-mode" type="button">Create account</button>
+            <button class="primary-action" id="auth-submit" type="submit">Login</button>
+          </div>
+          <button class="secondary-action wide admin-setup-action" id="open-admin-setup" type="button">Admin setup</button>
+        </form>
+
+        <form id="admin-setup-screen" class="flow-screen" novalidate>
+          <div class="screen-header">
+            <p class="step-count">Owner setup</p>
+            <h2>Admin access</h2>
+          </div>
+
+          <p class="access-note">Set the email, mobile number, and password that will open the admin user-details screen on this laptop.</p>
+
+          <label for="admin-email">Admin email ID</label>
+          <input id="admin-email" name="adminEmail" type="email" autocomplete="email" required placeholder="admin@example.com" />
+
+          <label for="admin-mobile">Admin mobile number</label>
+          <input id="admin-mobile" name="adminMobile" type="tel" autocomplete="tel" required placeholder="10 digit number" />
+
+          <label for="admin-password">Admin password</label>
+          <input id="admin-password" name="adminPassword" type="password" autocomplete="new-password" required placeholder="Password for normal app login" />
+
+          <label for="admin-username">Admin access username</label>
+          <input id="admin-username" name="adminUsername" type="text" autocomplete="username" required placeholder="Choose admin username" />
+
+          <label for="admin-access-password">Admin access password</label>
+          <input id="admin-access-password" name="adminAccessPassword" type="password" autocomplete="new-password" required placeholder="Password for Admin button" />
+
+          <label for="admin-confirm-password">Confirm admin access password</label>
+          <input id="admin-confirm-password" name="adminConfirmPassword" type="password" autocomplete="new-password" required placeholder="Re-enter admin access password" />
+
+          <label for="owner-setup-key">Owner setup key</label>
+          <input id="owner-setup-key" name="ownerSetupKey" type="password" required placeholder="Owner setup key" />
+
+          <p id="admin-setup-error" class="error-message" role="alert"></p>
+
+          <div class="button-row">
+            <button class="secondary-action" id="back-from-admin-setup" type="button">Back</button>
+            <button class="primary-action" type="submit">Save admin</button>
+          </div>
+        </form>
+
+        <form id="profile-screen" class="flow-screen" novalidate>
+          <div class="screen-header">
+            <p class="step-count">Step 2 of 2</p>
+            <h2>Profile details</h2>
+          </div>
+
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required placeholder="Your full name" />
+
+          <label for="mobile">Mobile number</label>
+          <input id="mobile" name="mobile" type="tel" autocomplete="tel" required placeholder="10 digit number" />
+
+          <p id="profile-error" class="error-message" role="alert"></p>
+
+          <div class="button-row">
+            <button class="secondary-action" id="back-to-credentials" type="button">Back</button>
+            <button class="primary-action" type="submit">Next</button>
+          </div>
+        </form>
+
+        <section id="email-sent-screen" class="flow-screen">
+          <div class="screen-header">
+            <p class="step-count">Verification</p>
+            <h2>Link sent to your email</h2>
+          </div>
+
+          <p class="body-copy">A login link has been prepared for <strong id="sent-email"></strong>.</p>
+          <div class="email-preview">
+            <p class="mail-label">Email message</p>
+            <p>Robot AI Joystick login link</p>
+            <a id="verification-link" class="mail-link" href="#">Open verification link</a>
+          </div>
+
+          <button class="secondary-action wide" id="restart-flow" type="button">Use another email</button>
+        </section>
+
+        <section id="confirm-screen" class="flow-screen">
+          <div class="screen-header">
+            <p class="step-count">Confirm login</p>
+            <h2>Do you want to login to this app?</h2>
+          </div>
+
+          <p class="body-copy">This will open Robot AI Joystick for <strong id="confirm-email"></strong>.</p>
+          <div class="button-row">
+            <button class="secondary-action" id="cancel-login" type="button">Cancel</button>
+            <button class="primary-action" id="accept-login" type="button">Okay</button>
+          </div>
+        </section>
+
+        <form id="setup-screen" class="flow-screen setup-screen" novalidate>
+          <div class="app-topbar">
+            <div>
+              <p class="step-count">Device setup</p>
+              <h2>Choose project and board</h2>
+            </div>
+            <button class="icon-button" id="setup-logout" type="button" aria-label="Log out">x</button>
+          </div>
+
+          <label>Project type</label>
+          <div class="project-tabs" role="tablist" aria-label="Project type">
+            <button class="project-tab active" type="button" data-project-type="boat" role="tab" aria-selected="true">Boat</button>
+            <button class="project-tab" type="button" data-project-type="drone" role="tab" aria-selected="false">Drone toy</button>
+            <button class="project-tab" type="button" data-project-type="rover" role="tab" aria-selected="false">Robot car</button>
+          </div>
+
+          <label for="project-name">Project name</label>
+          <input id="project-name" name="projectName" type="text" required placeholder="Example: River cleaning boat" />
+
+          <label for="controller-type">Microcontroller or computer</label>
+          <select id="controller-type" name="controllerType" required>
+            <option value="">Select controller</option>
+            <option value="esp32">ESP32</option>
+            <option value="arduino">Arduino Uno / Nano</option>
+            <option value="raspberry-pi">Raspberry Pi</option>
+            <option value="microbit">micro:bit</option>
+            <option value="other">Other microcontroller</option>
+          </select>
+
+          <div class="button-row setup-actions">
+            <button class="secondary-action" id="connect-device" type="button">Verify device</button>
+            <button class="primary-action" type="submit">Open joystick</button>
+          </div>
+
+          <p id="connection-status" class="status-message" role="status">Select the board used in your project before opening controls.</p>
+          <p id="setup-error" class="error-message" role="alert"></p>
+        </form>
+
+        <section id="app-screen" class="flow-screen app-home">
+          <div class="app-topbar">
+            <div>
+              <p class="step-count">Joystick active</p>
+              <h2 id="control-title">Boat controls</h2>
+            </div>
+            <div class="topbar-actions">
+              <button class="secondary-action mini-action" id="open-admin" type="button" hidden>Admin</button>
+              <button class="secondary-action mini-action" id="change-setup" type="button">Setup</button>
+              <button class="icon-button" id="logout" type="button" aria-label="Log out">x</button>
+            </div>
+          </div>
+
+          <div class="control-meta">
+            <span id="project-summary">Project: Not selected</span>
+            <span id="device-summary">Device: Not verified</span>
+          </div>
+
+          <div class="control-surface" aria-label="Joystick control surface">
+            <button class="direction up" type="button" data-command="forward" aria-label="Move forward">Forward</button>
+            <button class="direction left" type="button" data-command="left" aria-label="Move left">Left</button>
+            <button class="joystick stop-button" type="button" data-command="stop" aria-label="Stop">Stop</button>
+            <button class="direction right" type="button" data-command="right" aria-label="Move right">Right</button>
+            <button class="direction down" type="button" data-command="backward" aria-label="Move backward">Backward</button>
+          </div>
+
+          <div id="extra-controls" class="extra-controls" hidden>
+            <button class="secondary-action" type="button" data-command="up">Up</button>
+            <button class="secondary-action" type="button" data-command="down">Down</button>
+          </div>
+
+          <p id="command-status" class="status-message">Last command: Stop</p>
+
+          <div class="status-grid">
+            <div>
+              <span>Project</span>
+              <strong id="status-project">Boat</strong>
+            </div>
+            <div>
+              <span>Controller</span>
+              <strong id="status-device">ESP32</strong>
+            </div>
+          </div>
+        </section>
+
+        <form id="admin-unlock-screen" class="flow-screen" novalidate>
+          <div class="screen-header">
+            <p class="step-count">Admin access</p>
+            <h2>Enter admin key</h2>
+          </div>
+
+          <p class="access-note">Use the admin username and password set up on this laptop.</p>
+
+          <label for="admin-login-username">Admin username</label>
+          <input id="admin-login-username" name="adminLoginUsername" type="text" autocomplete="username" required placeholder="Admin username" />
+
+          <label for="admin-login-password">Admin password</label>
+          <input id="admin-login-password" name="adminLoginPassword" type="password" autocomplete="current-password" required placeholder="Admin password" />
+
+          <p id="admin-unlock-error" class="error-message" role="alert"></p>
+
+          <div class="button-row">
+            <button class="secondary-action" id="back-from-admin-unlock" type="button">Back</button>
+            <button class="primary-action" type="submit">Open admin</button>
+          </div>
+        </form>
+
+        <section id="admin-screen" class="flow-screen admin-screen">
+          <div class="app-topbar">
+            <div>
+              <p class="step-count">Owner access</p>
+              <h2>User details</h2>
+            </div>
+            <div class="topbar-actions">
+              <button class="secondary-action mini-action" id="back-to-app" type="button">Back</button>
+              <button class="icon-button" id="admin-logout" type="button" aria-label="Log out">x</button>
+            </div>
+          </div>
+
+          <div id="admin-users" class="admin-users" aria-live="polite"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="assets/app.js?v=14"></script>
+  </body>
+</html>
